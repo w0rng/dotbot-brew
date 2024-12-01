@@ -16,6 +16,18 @@ class Brew(dotbot.Plugin):
             "stdout": False,
             "force_intel": False,
         },
+        "tap": {
+            "stdin": False,
+            "stderr": False,
+            "stdout": False,
+            "force_intel": False,
+        },
+        "app-store": {
+            "stdin": False,
+            "stderr": False,
+            "stdout": False,
+            "force_intel": False,
+        },
         "cask": {
             "stdin": False,
             "stderr": False,
@@ -125,23 +137,24 @@ class Brew(dotbot.Plugin):
             self._log.error("Failed to install mas")
             return False
 
+
         result = True
 
         for app in apps:
             self._log.info(f"Install app {app} for appStore")
             success = self._invoke_shell_command(f"mas install {app}", context)
 
-            if success != 0:
+            if not success:
                 self._log.warning(f"Failed to install app [{app}]")
                 result = False
 
         return result
 
     def _brew_exist(self, context: Context) -> bool:
-        return self._invoke_shell_command("hash brew", context) == 0
+        return self._invoke_shell_command("hash brew", context)
 
     def _mas_exist(self, context: Context) -> bool:
-        return self._invoke_shell_command("hash mas", context) == 0
+        return self._invoke_shell_command("hash mas", context)
 
     def _install_brew(self, context: Context) -> bool:
         link = "https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
