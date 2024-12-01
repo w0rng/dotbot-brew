@@ -72,8 +72,9 @@ class Brew(dotbot.Plugin):
 
         for tap in tap_list:
             self._log.info(f"Tapping {tap}")
-            cmd_result = self._invoke_shell_command(f"brew tap {tap}", context)
-            if cmd_result != 0:
+            success = self._invoke_shell_command(f"brew tap {tap}", context)
+
+            if not success:
                 self._log.warning(f"Failed to tap [{tap}]")
                 result = False
 
@@ -126,6 +127,7 @@ class Brew(dotbot.Plugin):
                 f"brew install --cask {pkg} || brew ls --cask --versions {pkg}",
                 context,
             )
+
             if not success:
                 self._log.warning(f"Failed to install cask [{pkg}]")
                 result = False
